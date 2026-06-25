@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami-internal
+  namespace: internal
+  labels:
+    app.kubernetes.io/name: whoami-internal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: whoami-internal
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: whoami-internal
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami:v1.10.3
+          ports:
+            - name: http
+              containerPort: 80

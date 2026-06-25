@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://dl.gitea.com/charts/
+    chart: gitea
+    targetRevision: 10.6.0
+    helm:
+      values: |
+        strategy:
+          type: Recreate
+
+        gitea:
+          config:
+            server:
+              # TODO: Replace with your internal Gitea URL, for example https://gitea.home.arpa
+              ROOT_URL: https://gitea.internal.example.com
+            service:
+              DISABLE_REGISTRATION: true
+
+        ingress:
+          enabled: true
+          className: traefik
+          annotations:
+            # TODO: Use an internal ingress class/annotation if you split internal and external ingress.
+            cert-manager.io/cluster-issuer: internal-ca
+          hosts:
+            - host: gitea.internal.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: gitea-tls
+              hosts:
+                - gitea.internal.example.com
+
+        persistence:
+          enabled: true
+          # TODO: Set this to your preferred storage class, such as local-path, longhorn, or nfs-client.
+          storageClass: local-path
+          size: 20Gi
+
+        postgresql-ha:
+          enabled: false
+
+        postgresql:
+          enabled: true
+          primary:
+            persistence:
+              enabled: true
+              storageClass: local-path
+              size: 10Gi
+
+        redis-cluster:
+          enabled: false
+
+        redis:
+          enabled: true
+          master:
+            persistence:
+              enabled: true
+              storageClass: local-path
+              size: 2Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitea
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

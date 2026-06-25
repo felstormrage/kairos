@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-cert-manager
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    # TODO: Replace with your real Git repository URL.
+    repoURL: https://github.com/felstormrage/kairos.git
+    targetRevision: main
+    path: infrastructure/cert-manager
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-sealed-secrets
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/felstormrage/kairos.git
+    targetRevision: main
+    path: infrastructure/sealed-secrets
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sealed-secrets
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-gitea
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/felstormrage/kairos.git
+    targetRevision: main
+    path: infrastructure/gitea
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitea
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

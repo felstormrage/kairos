@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami-external
+  namespace: external
+  annotations:
+    # TODO: Replace with your public certificate issuer once configured.
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  # TODO: Replace with your external ingress class if you split internal/external ingress.
+  ingressClassName: traefik
+  rules:
+    # TODO: Replace with your public DNS name, for example whoami.example.com.
+    - host: whoami.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami-external
+                port:
+                  name: http
+  tls:
+    - secretName: whoami-external-tls
+      hosts:
+        - whoami.example.com

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami-internal
+  namespace: internal
+spec:
+  selector:
+    app.kubernetes.io/name: whoami-internal
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

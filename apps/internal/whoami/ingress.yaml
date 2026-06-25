@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami-internal
+  namespace: internal
+  annotations:
+    # TODO: Replace with your internal certificate issuer once configured.
+    cert-manager.io/cluster-issuer: internal-ca
+spec:
+  # TODO: Replace with your internal ingress class if you split internal/external ingress.
+  ingressClassName: traefik
+  rules:
+    # TODO: Replace with your internal DNS name, for example whoami.home.arpa.
+    - host: whoami.internal.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami-internal
+                port:
+                  name: http
+  tls:
+    - secretName: whoami-internal-tls
+      hosts:
+        - whoami.internal.example.com
