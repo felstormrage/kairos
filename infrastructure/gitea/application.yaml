@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://dl.gitea.com/charts/
     chart: gitea
-    targetRevision: 10.6.0
+    targetRevision: 12.6.0
     helm:
       values: |
         strategy:
@@ -16,6 +16,9 @@ spec:
 
         gitea:
           config:
+            database:
+              DB_TYPE: sqlite3
+              PATH: /data/gitea/gitea.db
             server:
               # TODO: Replace with your internal Gitea URL, for example https://gitea.home.arpa
               ROOT_URL: https://gitea.internal.example.com
@@ -42,29 +45,19 @@ spec:
           enabled: true
           # TODO: Set this to your preferred storage class, such as local-path, longhorn, or nfs-client.
           storageClass: local-path
-          size: 20Gi
+          size: 70Gi
 
         postgresql-ha:
           enabled: false
 
         postgresql:
-          enabled: true
-          primary:
-            persistence:
-              enabled: true
-              storageClass: local-path
-              size: 10Gi
-
-        redis-cluster:
           enabled: false
 
-        redis:
-          enabled: true
-          master:
-            persistence:
-              enabled: true
-              storageClass: local-path
-              size: 2Gi
+        valkey-cluster:
+          enabled: false
+
+        valkey:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: gitea
