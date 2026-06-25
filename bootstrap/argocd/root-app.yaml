@@ -6,9 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    # TODO: Replace with your real Git repository URL.
-    # Eventually this can point at your in-cluster Gitea URL.
-    repoURL: https://github.com/felstormrage/kairos.git
+    repoURL: https://gitea.home.arpa/felstormrage/kairos.git
     targetRevision: main
     path: clusters/homelab
   destination:

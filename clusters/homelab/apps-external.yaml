@@ -6,8 +6,7 @@ metadata:
 spec:
   project: external-apps
   source:
-    # TODO: Replace with your real Git repository URL.
-    repoURL: https://github.com/felstormrage/kairos.git
+    repoURL: https://gitea.home.arpa/felstormrage/kairos.git
     targetRevision: main
     path: apps/external/whoami
   destination:
