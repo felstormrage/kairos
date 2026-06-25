@@ -1,49 +1,4 @@
-# ---------------------------------------------------------------------------
-# SealedSecret: Gitea repository credentials for ArgoCD
-# ---------------------------------------------------------------------------
-# This file is committed to Git as an ENCRYPTED SealedSecret. It is only
-# decryptable by the sealed-secrets controller running in this cluster
-# (which holds the private half of the sealing key).
-#
-# The decrypted Secret lives in the `argocd` namespace and is labeled
-# `argocd.argoproj.io/secret-type: repository`, which tells ArgoCD to use
-# it as a repo credential when fetching Applications whose `repoURL`
-# matches `data.url` below.
-#
-# ---------------------------------------------------------------------------
-# HOW TO (RE)GENERATE THIS FILE (e.g. for PAT rotation)
-# ---------------------------------------------------------------------------
-# 1. Temporarily create the plain Secret manifest (do NOT commit it):
-#
-#    cat > /tmp/gitea-repo-secret.yaml <<'EOF'
-#    apiVersion: v1
-#    kind: Secret
-#    metadata:
-#      name: gitea-repo-creds
-#      namespace: argocd
-#      labels:
-#        argocd.argoproj.io/secret-type: repository
-#    type: Opaque
-#    stringData:
-#      url: https://gitea.home.arpa/your-user/kairos.git
-#      username: your-gitea-username
-#      password: <your-gitea-personal-access-token>
-#    EOF
-#
-# 2. Seal it with kubeseal against the running controller:
-#
-#    export KUBECONFIG=~/.kube/kairos-config
-#    kubeseal --format=yaml \
-#      --controller-namespace=sealed-secrets \
-#      --controller-name=sealed-secrets-controller \
-#      < /tmp/gitea-repo-secret.yaml \
-#      > infrastructure/argocd-repos/sealed-gitea-repo.yaml
-#
-# 3. (Optional) Re-add this header comment, since kubeseal overwrites the
-#    whole file. Then commit and push. Delete /tmp/gitea-repo-secret.yaml.
-#
-# Rotate by repeating these steps. The original PAT is never stored in Git.
-# ---------------------------------------------------------------------------
+---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
@@ -51,9 +6,10 @@ metadata:
   namespace: argocd
 spec:
   encryptedData:
-    password: AgCdlvNwbp21HDqCWS3E16GPPOtvUOUIk6ZVyG37U1v6JiWxW2FgoXibtqVwCokDWMGDlSVFn/GqzJ/gWDSWeByWdbn6BOtqAb/UMkXGpjlx/GujIzgG6OEy9HJ489vPTxAGDzgrbsBf4aNd2IYBFHZnMS15ox4ftWcaNbZ0mL2vp8vzsF8BR+lzAhS6rR/qRdNQagEbIlUapgQmAzEI5Q5aqrOR4gP7Z8zySJptgFVykcODxrcc8shYm1aORPfp5pRt9VzmgSK3/iW0o3yZwG2lCJo6/VYJQJQZZFJ+akJLdTnUF1gJXprUH/2WDDj33gUqZo6/Y1ydv8B+0vlNxYbtYGatVTNnas7eUQMXW85cxKNsSrug2VEOOqPUvmb5+xlDum//MKRC7iSGEBTQD2Uc83scpgRsJaQaju8Uc0jnexmFk5166ScluVpELVW4PelpR0M4gi3elriyXYeYrScg0dY6OtkMYhlgpjFutmT5pLU4m26Rq/Whiqm7QoS+A771q7wnJ/f3xWXcugkhwTFML4G7iBkslIlzyCU4Lofl5DfAVgffG6XMIWNjjxIx+C5gdA/mPoCWyvXsMICvTrHBfkL3rnNQ8k3R2wvEDUOV1Bx1OGDa14Oajpgz+omoYw/jaaYadEgtzNCjMvCpp0pvizAZLI4NnkpWqXOHigrvRR6hgUL3YeiVVvp0Qp+U1M2iaqLHZXyLV6rzzuQ0eSxPsarOreIRXvIdKaqSlRVwwb7enQFTK/FY
-    url: AgDtt4UYnc4ay2PHduD1dfmFvSzB6QiC4UMtCth8QTI5zg0ux+cL1sXYw/C7nK3i7t3gn8qZUjtkbsZR4a0uEUiuEQ756xDA3s5GBn/uRPHvL5KvNu3YMH9mgkdFQz1ZIgqXPB6iwa0jXFM5utNVua3hOuW2tnz9uv60VyXs1frFDYtjE6KCvdk3Htf50ZyQAPfL2EAAaT/T3wW6aYNUe+/ci9ObiU8WGM/1BhXdSd9JERbA0kLHvuJUsJs669eILnpvgMm3I97AfLL+aqiZ/Pw+ItACDrLqv3BxqMhS+TK9nCQe39A8c7HCCAYlLZlKC8+HlLd9zWCr0zgyRp4aJGMDKYofQEZ8Z0lvNOqXQPklrDN7y3R9Q798+bJ1vwkqW6LgfdFARXWnAF0Di9IuE9d0xtFZDxRHMD1q3GNFa8XAdc0joTNlDF4oDmw1jx0cW3w5EWKzdG/tFDMbmROSBQP2ksvogHutPTDDHZhTkTl1BEgqPkdp4T7yL/uY09JB4tPgMRsvuk2hyOcrdbORpE/iTv9BwMc9O54ibOECs+J6v6JSV76nNoF1N6tn9B9xlCPP0jyT0FdAVU0xpBs+dRH8OBP5ebFdE1lzt/QlWj9ViLaSDg2WLt10LqTVyl5ooZGT/cm9wOBAIHZR1I3YgcNBUCt/xiQKTPv9OJYnQkiKg60Vy1AJ0/BoF4lLSQufI6D9vNITOIOJDquM+aXAuDpZx4HyacY7dF3/313TmCIig32jTgYerhiKiZa4KlU4Mg==
-    username: AgBxa9BaomAmuGFWTRjx9K7+oRhOfBhPJMhoKVuAajWvpuEP0runh0mati5IRBNE+Cq2SP2Aea4yVa0f033ROkyi2ftvxVN+APhbdU8fbeWlZhDA3HRREEnesbHt1gL5okTY652QaIdH7/cgW2Uo1WKvX+5ITKG38ASjmTljisNsWAaE6b6WKz2jR7lyxyPEbXPAXN1GAC0TJZx0/9trFMqytlXMKyzLIRh1Ai1cOGJWsQaRpqfoIshWTRvZBik1vLqSiVkwbI5efgfbOJaaxY690pGK4i3+Sn4Pqfzj3AUFfXrXxPXLun1UwQcGbpfVykFRJrroCATZnjKdklrJM0tOftuvQDDMXqFHogvWv3g8DlRQyCdhu5Fef5mnClZpnh4DHE3HxpE0qt3VVzCBMqNPUjkS0KGuasKRRQt/eIa5aVLcs4PDT+6AEZ4dKCGxqtFcY4q4AQZ5lz8XSNJKTGTXuIlmL0wYNU1DPCCl7XNVS9MRUDyqK1qULEr52Znkr0NAPlLgUamUsKPfy/096bo++TjGS2UisHH1uU4R/O2Fx0VPlZk2TrimXvYRgG8zhtqImQGd/SaI62RQXhu+u3l9Qq/D+YL+KsnuYDefcorTifgo69H/iyFhp/o/m3tuIvNHYMpVD7RsZIR/eA1x2pSiB87XbADPtDmOQXl0NfW1EaI5VPcNOSZBu1QH/cormgy64ox719G5tg55er8=
+    insecure: AgA4RnQ8e/6l74aH0q6kT4NTZSvvIRX1ecL/5sC2SG4NnmlQk+hThRPEeQs7MTMlnHOF3d/anNH250Phy+3Ww3C82apqShytvGISCvqamJdHWyM5SQP2JOhMy8v5kr7umc/0J9t6QlgoosAiVfPwH7G3mcG3kLLH/llOLLecnU8pveMqyVnCxSNz9A95biNNl2F+6s1lptz8bDgCZYI6/vqRPn88SD73J946iU6lSpVLSAfGRK/DCVcZnsZm4pHMrFfmsPMiLUOOxqzQgo0ytzBkqzcJuLChFH6GZOpUWp80/mjSC3kmlqhjwWBCKG02a58RQ8XqeIQKLHsg+uBP785ve9nDe5fxqMpfwIdU8atTg0FV58sUaQ/NFXVX4McHUgIEQGTg2AkitQuEd6WHtEHqQD4dB+3Z0SVtWqRTk/UTRFoMwyu+UJwuiGTHOCZDIMMktmafm7Xe9qKsxd28b5uoF/RbbFcn5ok3KwFSMO2/Ve8Rba+IWYiD7AFllDAs/P7exXqhVKiYJ7r2lioHB1h2Dcwo8Iydudck6TaJ7SUWhax75irPpvM/nyDV3iXCRWcH0dNh4RunoR2OdSQX8jpfsVEl5NZ7tLNNnrz8fvSER8I96Fe5WvcY8q2Ob7u28s1BSOS0QClpeUqrdN3tWW0NQOHPdROT1asbkKVhZOqBxaxcFqkn7FM1B7e9TgYvTAalny2c
+    password: AgCAlPxJECb/MsKA2N/15KCRneRZmITihgw1Da9p7gyeaxDoz2WmGQlCgGRbEgFoAjtFgG74HKomq6mIPYrtOnZKe5ajyXQkJK7P4hhZ5TSO83TemeB++LV2ETz/hQRSO/rraCTO8lVe9PLXbEgPVPXIegzLEEJ2D8BAIG1XFDgvZ963hwnj9F4Uf0Co8Ni0xm1jo+X+yIGD/Epb0tbcTjYUmwtXJ5VxG+zxWM+XbuMZ3hoX0hR8T7m9eIQeWUPnazxj82uTvKZ+MikFbsP3DD+x0pb8tUeIZL2dPApbWk+vo/Us15Dm6lWOSp2+pJjLOtInd6r4SrSszZ2pG/hmRaliTf1m2cxyQlBvb1pUAlIIJUmxKIsB1IuutEi/puOcP6vwyOcEmJdh5o5WmU5JCHkNElaci6kMsgqcC5aPvxfJyiofHX/FrCUpXr72VoPOs7ZzMADNyShvfSpxEteXyWwNpijZwCC1bcDOaKYGnHwrCxGGrRSLo2wS/WGpvacvMpv5uLxFBhmfQ4/kLX7PX5WGjCYlmuhZDMIUpOD7O29bE7fZNfl26RpO4YG8KhhDLrrnbxM+yrzsULNP9a+m1iLcHAbDUqZEa+PiqSJThTw5M8Lk1a2qV0m/bkKINZAxLXCFe1yw31QYMoXdRaghm1gAZPXByMmkFXDhEBviFdE29HRtUAJSiXtsTZrtSgoJw+UP/zSarnvMe2k2ZmYuyulEM2PU9XUXi9eG7rbFX3kf0V73DXSPL2JG
+    url: AgBRbq7RJjwEaQq70CNGXAQUly/PSf8y/IZGQAXIs0wuKb/jjAmt9HNIU/4DzMpRn+rE4HJkQ1A6zk5zFp3FXeAFgUiXoBKd8y5KwyckKbkq1PClQGLpJw1YA0vkOHGF/wquNbBLEtnYi4BGGDIermi+Czg5wPTU47lUFzGMdXcYaUSFnpovU+yRakuiffrWM6Bxao6RD+c3CepWLcaQEYAgCk4qVADRzhKwj+a+6xSZMPmOGppq2pmxBtQ6WZKIe3YjzbZqeJhCvm/vPgITtN9ULnCH+Eost8RusZs9oPC+FrbAFLXLWjNQ2VGWhh8cgMu6IVIUkTq/1B/NG/ckCUNAHINkE0+7W/61OH1cL27noAjZZ1rAbjGzUe+tzWLZhhyqOx8L3ozJAAD+EQyf6y1e1Y9WpxidDJ3068LixIBf0NmOqV6GSx+Mei5WF2rbHh3Fggcynr6X01KZPcqzokVaStXe37NYmJz8o1X2d8vTLX/ynOZeHn1HED81EmTsbbfHFRncRkn8mMTEsxH6rT+I8h1z8Q+EU7Aj+j6TEOKONj7omnD4ME/+mJFl2YJB96GtUfY7yC+OUZnX0uunN6NDGkL/yAULWIrF9sMYdNtt7DCCBC/ob6XIaNb1boET7zaQ+8su/cjD1g1ME8BBkdVj4WtD4OANREa6okLkPxw+0bZx0jiRl8Ysmw7xE/iWWAH2ipz2taa9mApn9GZdp6A/n2l9dvCytj7JIMd+olx3jdVOnLytdwirHBxbQiYl/g==
+    username: AgDa3Hd1otzFgtxA9ba1Abr/8gErZ/Gd6YBp5oWLOQCUfQm6dfOHzE8TNU9IKgcx7DPQh2YFeblu47M6YQGm3jNlxqm4tgWZDXfBkLbm16fNGASa19O1yEXh9CaUOTu55nVuw7fPtf/Mlse6ldoomoJ+ysOYpPZbioBPnYc9NAuKhv5J9Iw59jQSqOxfzWHjYd3o/2t5cWPniD1/xPNjvaBn15R/qWMV6NplBHfkm3Ut9iRE5WDeq+HqYHDtGeSZFfXCiL7XndvDMRWldqbTTDTUfivT//fP14EUbDEJmkRLuvutWOXMMNKfiSkpsr4I171CyDUdWW9LK6rVHXiK4mxcIzRhTjXpXHcXi9tL8ndPMWeivlU23YjQwcapov3gptp2nwNplmzSzwcFs8OlPyl8KETtbJXjVlXH5y4R3v7vWYxLhN4YV0VX5LM4Sl0H5FQ/BYbpfa7IiOHbkfsR7tLXP4TyirDFhERGzZ1k8mmRsrHWvDLlQ2ackVj8EJsh4rMGhvyKmo61pXeHKT1cJ0J32wbREAssWX/853ZIDrXEUgubBEyQ6Ze1D/9FU+CYzu7018AMiKsCIjmqvkwHQ1WDv8CihpuA9ce3XpURngEkkLNvytJFexd71f+p2y/XhhGV+yo/Bn9JalVKzKGf1a4juZ3wHebtj1CvitQR9kfsm7ITPyygRxCCCMf0PlaM1fybcs4Fm/s5sufPlLI=
   template:
     metadata:
       labels:
