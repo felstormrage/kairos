@@ -97,10 +97,15 @@ https://localhost:8080
 4. Sync cert-manager.
 5. Confirm ingress strategy.
 6. Deploy Gitea internally first.
-7. Move this repository into Gitea.
-8. Update ArgoCD `repoURL` values to point to Gitea.
-9. Add internal apps.
-10. Add external apps.
+7. Create a Gitea Personal Access Token (PAT) with read access to the repo.
+8. Seal the PAT into `infrastructure/argocd-repos/sealed-gitea-repo.yaml`
+   (see that file's header comment for the `kubeseal` command) and commit it.
+   Sync `infra-argocd-repos` so ArgoCD registers the Gitea repo credential
+   in the `argocd` namespace BEFORE you flip any `repoURL`.
+9. Move this repository into Gitea.
+10. Update ArgoCD `repoURL` values to point to Gitea.
+11. Add internal apps.
+12. Add external apps.
 
 ## Notes
 

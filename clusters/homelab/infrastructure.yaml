@@ -61,3 +61,22 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-argocd-repos
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/felstormrage/kairos.git
+    targetRevision: main
+    path: infrastructure/argocd-repos
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

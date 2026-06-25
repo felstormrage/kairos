@@ -20,8 +20,7 @@ spec:
               DB_TYPE: sqlite3
               PATH: /data/gitea/gitea.db
             server:
-              # TODO: Replace with your internal Gitea URL, for example https://gitea.home.arpa
-              ROOT_URL: https://gitea.internal.example.com
+              ROOT_URL: https://gitea.home.arpa
             service:
               DISABLE_REGISTRATION: true
 
@@ -32,14 +31,14 @@ spec:
             # TODO: Use an internal ingress class/annotation if you split internal and external ingress.
             cert-manager.io/cluster-issuer: internal-ca
           hosts:
-            - host: gitea.internal.example.com
+            - host: gitea.home.arpa
               paths:
                 - path: /
                   pathType: Prefix
           tls:
             - secretName: gitea-tls
               hosts:
-                - gitea.internal.example.com
+                - gitea.home.arpa
 
         persistence:
           enabled: true
