@@ -1,0 +1,63 @@
+# ---------------------------------------------------------------------------
+# SealedSecret: Gitea repository credentials for ArgoCD
+# ---------------------------------------------------------------------------
+# This file is committed to Git as an ENCRYPTED SealedSecret. It is only
+# decryptable by the sealed-secrets controller running in this cluster
+# (which holds the private half of the sealing key).
+#
+# The decrypted Secret lives in the `argocd` namespace and is labeled
+# `argocd.argoproj.io/secret-type: repository`, which tells ArgoCD to use
+# it as a repo credential when fetching Applications whose `repoURL`
+# matches `data.url` below.
+#
+# ---------------------------------------------------------------------------
+# HOW TO (RE)GENERATE THIS FILE (e.g. for PAT rotation)
+# ---------------------------------------------------------------------------
+# 1. Temporarily create the plain Secret manifest (do NOT commit it):
+#
+#    cat > /tmp/gitea-repo-secret.yaml <<'EOF'
+#    apiVersion: v1
+#    kind: Secret
+#    metadata:
+#      name: gitea-repo-creds
+#      namespace: argocd
+#      labels:
+#        argocd.argoproj.io/secret-type: repository
+#    type: Opaque
+#    stringData:
+#      url: https://gitea.home.arpa/your-user/kairos.git
+#      username: your-gitea-username
+#      password: <your-gitea-personal-access-token>
+#    EOF
+#
+# 2. Seal it with kubeseal against the running controller:
+#
+#    export KUBECONFIG=~/.kube/kairos-config
+#    kubeseal --format=yaml \
+#      --controller-namespace=sealed-secrets \
+#      --controller-name=sealed-secrets-controller \
+#      < /tmp/gitea-repo-secret.yaml \
+#      > infrastructure/argocd-repos/sealed-gitea-repo.yaml
+#
+# 3. (Optional) Re-add this header comment, since kubeseal overwrites the
+#    whole file. Then commit and push. Delete /tmp/gitea-repo-secret.yaml.
+#
+# Rotate by repeating these steps. The original PAT is never stored in Git.
+# ---------------------------------------------------------------------------
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: gitea-repo-creds
+  namespace: argocd
+spec:
+  encryptedData:
+    password: AgAn4zXwzVbnczQHkIdQlxkDMAicVCEmJGdKs5CAQd88PNV210yYrr0RYgbLlkRRWZD32v/VKoFo3CtHJS7mR6qW4jV/6gEcB5YMSOumHi13NgGNpv3jo+0gt4R3Y2zQWpRVwLdKrgh/fu/oL4a3ZwiMn0xQS8dou/CcFKR59EozQO3+Zqcc/0minvQe+t0NKwZbFRRnzENZomMycmOfAIIPIP0KqWoIYlNviqoA0XGK3EV1bXimAW075lXQckfhpWRSQ3cCsI8PAkT67AQWPtCNfBpNyLx5gKAD3jXFCc3uf0IDI2CneS/GV9dgIc1VzWiW/o3qsTFM+gltod3TsX3hI7bCSeqUd6iS7X+9CdHc2ML2/GxTKK7/qMNrZ+fFRMLHQlEWqcdjvTgy9WfzDy72RtP4GuqF6ghi1+HAwgbhI7xQVoXbsUPYPdPtsh6Ic1vlxnUkYO5rqlgFdfnDszEvXYvaWgnnc+Utfvvkn7FWgg6LXPkTsdHJ4ga+UYQCTmA76NR3wDPdb/hBMX/ulQcCmDP6nNiEe7HBRlEnFcPrH6v1dHNsXIW845v/3cnmsWn2C83SUgOfx6KAXS8VmsIhQ7dTMOtSwWmzBezHiS3zTVCF6yaWVD+D+GXOla5MpVkynFmGZwxqIBVgZos6iQ51fLUBwhq3OAO44+HVFoZ9N7Dza92k6iu9Gb/LQMDCaIILx9hyZIZu75TOzlJ/b+gF4n4RSimUfbinQwD0nnnJhGEiIZaN1w18
+    url: AgB1+Qyxq0+oswOqHEJGiOeXNhc2JTXTRGgelrANwp25Ltw2FLJd1JpaMmVBT9psCyFe892iPWXsYVcrgu3iPAHdthmCjpSoqGITdi+Z/07I4ri3UqbckVz8qJ/Cmek3l3N/OUIV7uLTxdc3pIsdKXHLhRD6YEFaz8rrn/EFvfD4pQv+x237KDEgZPvYU0+hf8WeC9ZHwQK4w/6LWikaERwM/MZmixq0uV4LNYQQkJkEgN/oGoymaZ0ujxwVeORtPE9X9U2qkp5GlEcbmhBAHXHWnh3A6yty5c0LJ9w6t/HpP1SIcVYALx7zoRty4eUNqFoWnJ3YOTa7pgYZjIw6bwKE3y+DMBWbw6HHvStt7+icdOBItw5byKz+m8vCYrwInS1eu5fHcZrYtHOJ4KWUEII7F/Alv3N2Amh2l5sPpdN/cfhIzfbDvVYpJoe6Tca/klE6FYC+1mJsrBDcLRGbViPaQ2ycjRS58INW6xDR+nX6YNKaXXfvdI7B87XpLRD7YwsvaPSHkvvLAiv27C8rpr0zWoZ2XcCf4tpXiotp9cl1An+x/QtqRPg6CwgNPv709nKxBCgeh8Pld2u+y2RD6C3od5z0iCowfqldVvgKIqRfmBqUpF5K/QFQILOZ6CKMlV3mOZqE0DD4TsmNnDkv8qI8n7qhvh0C55oYOixsmIcH8pgJsnYq0IKIuiHNi1EPDnwBmbvHAb9A0GEBNSX1/MUJkReQqYDrMyApS9K02M8hAsHu0a33InSExa2LPg==
+    username: AgDXlRCqHH3i/Sc8aavntdPp9CBya8z5R5SZPUoUBRHjFG9L16JTJzRPQk0C46WevCrnP476e2s3uJskobxYVCT/n30qj3fcR4zmP7jISakbXme69b6nbQUyDaVbInb3gCXfmh6YeZMD92F1oTJ1U23JWwlyhOkC1JGC2eAW7BUMz8XvZf6rEhgKdHQsUaSdOoIjZCzHem1aVhmByGYzxVZix2l8MLupzqWM2fwsTGcF6479dKsumiP44fi/Lq1r310EqNKDTe4iI2dChNrJwdTydDlo4h44wOn/ahZd087OnPBSuCEufdN10ihEK1Egnld7bWLe2GFBR4GcKzz8jRRTGupiKSUquFXueIBrRFvRrTOBr/KE4jy9UjqMArucuwLPxFN0SVC2MU1HBUt8ojSLG8Pw3QY02eHvFPTY2LrsiYsYmeDRDdLLytU2ADZpKRANP5hKNkcolKCVCN4yHfpJT9R6SD9z6RR+UocScCWZNLyffL6GkOIzIMHQZykgQ81NShZyR9ufz8hoBMSs063FKF52RmoSnGD30idvbQ2zxThduruP2/rJ5xQREtvpBwLpif5rcTSq3SqyIcIRGfmiEfJF8bbMos20ExoF0mplGHPQkZ8p0yHQwlhHtuRqXKbl5HvBcWl610iVx15celaol2OjbVQ2TWQZ5MWn3n2tmbZA5A+diQxwslIur+wOn2RSKiqI9inI4yicRm8=
+  template:
+    metadata:
+      labels:
+        argocd.argoproj.io/secret-type: repository
+      name: gitea-repo-creds
+      namespace: argocd
+    type: Opaque
